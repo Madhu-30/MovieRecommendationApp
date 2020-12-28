@@ -59,11 +59,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(search_edit.getText().toString().isEmpty()){
+                    Toast.makeText(MainActivity.this, "Search Key missing", Toast.LENGTH_LONG).show();
 
                 }
                 else {
                     String search_key = search_edit.getText().toString();
-                    Toast.makeText(MainActivity.this, search_key, Toast.LENGTH_LONG).show();
 
                     getMovies(search_key);
                 }
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             movieModel.setTitle(movies.getJSONObject(i).getString("Title"));
             movieModel.setImdbID(movies.getJSONObject(i).getString("imdbID"));
             movieModel.setType(movies.getJSONObject(i).getString("Type"));
-            movieModel.setType(movies.getJSONObject(i).getString("Year"));
+            movieModel.setYear(movies.getJSONObject(i).getString("Year"));
             list.add(movieModel);
         }
     }
