@@ -58,7 +58,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         TextView movie_type;
         ImageView movie_poster;
 
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 

@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
@@ -55,11 +56,14 @@ public class MainActivity extends AppCompatActivity {
         mCall.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Toast.makeText(MainActivity.this, "I am sorry. I don't know", Toast.LENGTH_SHORT).show();
+                Log.d("BAMCHIKI", e.getMessage());
+//                Toast.makeText(MainActivity.this, "I am sorry. I don't know", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Log.d("BAMCHIKI", "1");
+
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONArray movies = jsonObject.getJSONArray("Search");
@@ -72,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
     private void addToMoviesList(JSONArray movies) throws JSONException {
@@ -84,5 +90,11 @@ public class MainActivity extends AppCompatActivity {
             movieModel.setType(movies.getJSONObject(i).getString("Year"));
             list.add(movieModel);
         }
+
+        runOnUiThread(() -> {
+            MyAdapter adapter = new MyAdapter(list, MainActivity.this);
+            recyclerView.setAdapter(adapter);
+        });
+
     }
 }
