@@ -1,6 +1,7 @@
 package com.example.mymovierecommendationapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         Picasso.get().load(model.getPoster())
                 .resize(90, 90)
                 .into(holder.movie_poster);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MovieDetails.class);
+                intent.putExtra("movie_id", model.getImdbID());
+                intent.putExtra("movie_name", model.getTitle());
+                intent.putExtra("movie_type", model.getType());
+                intent.putExtra("movie_year", model.getYear());
+                intent.putExtra("movie_poster", model.getPoster());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

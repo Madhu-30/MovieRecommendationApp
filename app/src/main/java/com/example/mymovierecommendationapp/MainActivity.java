@@ -6,6 +6,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
@@ -31,12 +34,17 @@ public class MainActivity extends AppCompatActivity {
     Call mCall;
     ArrayList<MovieModel> list = new ArrayList<>();
 
+    ImageView search;
+    EditText search_edit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recyclerView);
+        search = findViewById(R.id.search_button);
+        search_edit = findViewById(R.id.search);
 
 //        list.add("Facebook");
 //        list.add("Instagram");
@@ -44,10 +52,33 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+
         recyclerView.setLayoutManager(linearLayoutManager);
 
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(search_edit.getText().toString().isEmpty()){
+
+                }
+                else {
+                    String search_key = search_edit.getText().toString();
+                    Toast.makeText(MainActivity.this, search_key, Toast.LENGTH_LONG).show();
+
+                    getMovies(search_key);
+                }
+            }
+        });
+
+        getMovies("Batman");
+
+    }
+
+    private void getMovies(String search_key){
+        list.clear();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.base_url).newBuilder();
-        urlBuilder.addQueryParameter("s", "Batman");
+        urlBuilder.addQueryParameter("s", search_key);
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder().url(url).build();
@@ -56,25 +87,29 @@ public class MainActivity extends AppCompatActivity {
         mCall.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.d("BAMCHIKI", e.getMessage());
 //                Toast.makeText(MainActivity.this, "I am sorry. I don't know", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                Log.d("BAMCHIKI", "1");
-
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONArray movies = jsonObject.getJSONArray("Search");
                     addToMoviesList(movies);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            MyAdapter adapter = new MyAdapter(list, MainActivity.this);
+                            recyclerView.setAdapter(adapter);
+                        }
+                    });
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
-
-
     }
 
     private void addToMoviesList(JSONArray movies) throws JSONException {
@@ -88,9 +123,6 @@ public class MainActivity extends AppCompatActivity {
             list.add(movieModel);
         }
 
-        runOnUiThread(() -> {
-            MyAdapter adapter = new MyAdapter(list, MainActivity.this);
-            recyclerView.setAdapter(adapter);
-        });
+
     }
 }
