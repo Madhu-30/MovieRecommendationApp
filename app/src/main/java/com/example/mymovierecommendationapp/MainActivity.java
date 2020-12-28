@@ -68,9 +68,6 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONArray movies = jsonObject.getJSONArray("Search");
                     addToMoviesList(movies);
-
-                    MyAdapter adapter = new MyAdapter(list, MainActivity.this);
-                    recyclerView.setAdapter(adapter);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -95,6 +92,5 @@ public class MainActivity extends AppCompatActivity {
             MyAdapter adapter = new MyAdapter(list, MainActivity.this);
             recyclerView.setAdapter(adapter);
         });
-
     }
 }
