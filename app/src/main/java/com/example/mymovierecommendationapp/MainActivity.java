@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(linearLayoutManager);
 
-
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,7 +121,5 @@ public class MainActivity extends AppCompatActivity {
             movieModel.setType(movies.getJSONObject(i).getString("Year"));
             list.add(movieModel);
         }
-
-
     }
 }
